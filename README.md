@@ -32,14 +32,14 @@ This program requires three inputs. The first is a general control input file th
 The contents are as follows:
 
 
-Line 1: Header Line
-Line 2: Header Line
-Line 3: Name of flagged ADCIRC mesh file to be interpolated
-Line 4: Coordinate system (0 for Cartesian and 1 for Geographic)
-Line 5: Z-multiplication factor
-Line 6: Output ADCIRC mesh wither interpolated values
-Line 7: Number of flt/hdr rasters
-Line 8+: Raster file names (without the file extension)
+* Line 1: Header Line
+* Line 2: Header Line
+* Line 3: Name of flagged ADCIRC mesh file to be interpolated
+* Line 4: Coordinate system (0 for Cartesian and 1 for Geographic)
+* Line 5: Z-multiplication factor
+* Line 6: Output ADCIRC mesh wither interpolated values
+* Line 7: Number of flt/hdr rasters
+* Line 8+: Raster file names (without the file extension)
 
 ## Disclaimer
 
