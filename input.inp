@@ -1,0 +1,11 @@
+Keep characters out of first 60 lines
+************************************************************
+IRLfloodplain.grd                                            ! INPUT ADCIRC MESH
+0                                                            ! COORDINATE SYS. (0 for Cartesian; 1 for lat/lon)
+-1.0                                                         ! Z-MULTIPLICATION FACTOR
+IRLfloodplain_4DEM_z.grd                                     ! OUTPUT ADCIRC MESH WITH INTERPOLATED Z-VALUES
+4                                                            ! Number of DEM files to interpolate
+DEM_A1
+DEM_A2
+DEM_B1
+DEM_B2

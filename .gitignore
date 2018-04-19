@@ -17,7 +17,6 @@ libtool
 config/package_config.h
 config/version_list.h
 config/config.h
-doc
 configure
 Makefile.in
 aclocal.m4

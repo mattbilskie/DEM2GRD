@@ -31,7 +31,6 @@ This program requires three inputs. The first is a general control input file th
 
 The contents are as follows:
 
-
 * Line 1: Header Line
 * Line 2: Header Line
 * Line 3: Name of flagged ADCIRC mesh file to be interpolated
@@ -40,6 +39,9 @@ The contents are as follows:
 * Line 6: Output ADCIRC mesh wither interpolated values
 * Line 7: Number of flt/hdr rasters
 * Line 8+: Raster file names (without the file extension)
+
+Notes on the flagged ADCIRC mesh:
+Only flagged nodes (less than or equal to -1000) will be included for interpolation. A flag value of -1001 uses the method in Bilskie & Hagen. A flag value of -1002 will use the methods in Bilskie & Hagen and multiply the result by 2, a value of -1003 will multiple by 3, and so on. This essentially increases the control volume and is a method to smooth the elevations. Including a “1” in the hundredths place will only interpolate “wet” value within the control volume (i.e. -1101). This is useful for interpolating within rivers and channels when you do not want to include DEM cells on the land in the averaging method.
 
 ## Disclaimer
 
