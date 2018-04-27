@@ -428,7 +428,7 @@
         REAL(8)                         :: x_toplt
         REAL(8)                         :: y_toplt
         
-        INTEGER                         :: I
+        INTEGER                         :: I,J
         INTEGER                         :: cs
         INTEGER                         :: NumDEMFiles
         
@@ -468,7 +468,7 @@
         WRITE(*,'(A)')' PROGRAM TO INTERPOLATE A FLT/GRD RASTER DEM TO       '
         WRITE(*,'(A)')' ADCIRC MESH NODES.                                   '
         WRITE(*,'(A)')''
-        WRITE(*,'(A)')'MATTHEW V. BILSKIE, E.I.                              '
+        WRITE(*,'(A)')'MATTHEW V. BILSKIE, Ph.D.                             '
         WRITE(*,'(A)')'Matt.Bilskie@gmail.com'
         WRITE(*,'(A)')'Copyright M. Bilskie (2013)'
         WRITE(*,'(A)')'Please cite:'
@@ -533,13 +533,20 @@
             CALL ReadFlt(HDRFile(I),DEMFile(I),myFLT)
             !CALL CAA(myMesh,flagMesh,zMesh,myFLT,mult_fac,coord) 
             CALL CAA(myMesh,flagMesh,myFLT,coord) 
+            DO J = 1, myMesh%np
+                IF(ZCount(J).NE.0) THEN
+                    myMesh%nodes(J,3) = mult_fac * (ZSum(J) / ZCount(J))
+                ENDIF
+            ENDDO
+            ZCount(:) = 0
+            ZSum(:) = 0
         ENDDO
 
-        DO I = 1, myMesh%np
-            IF(ZCount(I).NE.0) THEN
-                myMesh%nodes(I,3) = mult_fac * (ZSum(I) / ZCount(I))
-            ENDIF
-        ENDDO
+!       DO I = 1, myMesh%np
+!           IF(ZCount(I).NE.0) THEN
+!               myMesh%nodes(I,3) = mult_fac * (ZSum(I) / ZCount(I))
+!           ENDIF
+!       ENDDO
         
         !CALL WriteMesh(zMesh,outMeshFile,coord) 
         CALL WriteMesh(myMesh,outMeshFile,coord) 
@@ -618,12 +625,13 @@
             y = myMesh%nodes(I,2)
             z = myMesh%nodes(I,3)
             
-            IF(Node_InOut(I).EQ.-1) GOTO 2000 !...Only interpolate flagged-values
+            IF(z.GT.-1000) GOTO 2000 !...Only interpolate flagged-values
+            !IF(Node_InOut(I).EQ.-1) GOTO 2000 !...Only interpolate flagged-values
 
             IF((x.GT.x_toplt).AND.(x.LT.x_botrt).AND.(y.GT.y_botrt).AND. &
                     (y.LT.y_toplt))THEN
 
-                Node_InOut(I) = 1
+                !Node_InOut(I) = 1
 
                 dx = x_toplt - x
                 dy = y_toplt - y
