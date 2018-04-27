@@ -91,7 +91,6 @@
     MODULE ADCGRID
         USE MISC
 
-        INTEGER,ALLOCATABLE             :: Node_InOut(:)
         REAL(8),ALLOCATABLE             :: ZCount(:)
         REAL(8),ALLOCATABLE             :: ZSum(:)
 
@@ -428,7 +427,7 @@
         REAL(8)                         :: x_toplt
         REAL(8)                         :: y_toplt
         
-        INTEGER                         :: I
+        INTEGER                         :: I,J
         INTEGER                         :: cs
         INTEGER                         :: NumDEMFiles
         
@@ -468,7 +467,7 @@
         WRITE(*,'(A)')' PROGRAM TO INTERPOLATE A FLT/GRD RASTER DEM TO       '
         WRITE(*,'(A)')' ADCIRC MESH NODES.                                   '
         WRITE(*,'(A)')''
-        WRITE(*,'(A)')'MATTHEW V. BILSKIE, E.I.                              '
+        WRITE(*,'(A)')'MATTHEW V. BILSKIE, Ph.D.                             '
         WRITE(*,'(A)')'Matt.Bilskie@gmail.com'
         WRITE(*,'(A)')'Copyright M. Bilskie (2013)'
         WRITE(*,'(A)')'Please cite:'
@@ -508,18 +507,10 @@
         ENDIF
 
         CALL ReadMesh(meshFile,myMesh)
-        ALLOCATE(Node_InOut(1:myMesh%np))
         ALLOCATE(ZCount(1:myMesh%np))
         ALLOCATE(ZSum(1:myMesh%np))
         ZCount(:) = 0
         ZSum(:) = 0
-        DO I = 1, myMesh%np
-            IF(myMesh%nodes(I,3).GT.-1000)THEN
-                Node_InOut(I) = -1
-            ELSE
-                Node_InOut(I) = 1
-            ENDIF
-        ENDDO
 
         ! Removing the need to have a second mesh of flagged values
         flagMesh = myMesh
@@ -531,17 +522,16 @@
 
         DO I = 1, NumDEMFiles
             CALL ReadFlt(HDRFile(I),DEMFile(I),myFLT)
-            !CALL CAA(myMesh,flagMesh,zMesh,myFLT,mult_fac,coord) 
             CALL CAA(myMesh,flagMesh,myFLT,coord) 
-        ENDDO
-
-        DO I = 1, myMesh%np
-            IF(ZCount(I).NE.0) THEN
-                myMesh%nodes(I,3) = mult_fac * (ZSum(I) / ZCount(I))
-            ENDIF
+            DO J = 1, myMesh%np
+                IF(ZCount(J).NE.0) THEN
+                    myMesh%nodes(J,3) = mult_fac * (ZSum(J) / ZCount(J))
+                ENDIF
+            ENDDO
+            ZCount(:) = 0
+            ZSum(:) = 0
         ENDDO
         
-        !CALL WriteMesh(zMesh,outMeshFile,coord) 
         CALL WriteMesh(myMesh,outMeshFile,coord) 
 
         WRITE(*,'(A)')''
@@ -618,12 +608,10 @@
             y = myMesh%nodes(I,2)
             z = myMesh%nodes(I,3)
             
-            IF(Node_InOut(I).EQ.-1) GOTO 2000 !...Only interpolate flagged-values
+            IF(z.GT.-1000) GOTO 2000 !...Only interpolate flagged-values
 
             IF((x.GT.x_toplt).AND.(x.LT.x_botrt).AND.(y.GT.y_botrt).AND. &
                     (y.LT.y_toplt))THEN
-
-                Node_InOut(I) = 1
 
                 dx = x_toplt - x
                 dy = y_toplt - y
