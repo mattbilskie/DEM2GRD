@@ -91,7 +91,6 @@
     MODULE ADCGRID
         USE MISC
 
-        INTEGER,ALLOCATABLE             :: Node_InOut(:)
         REAL(8),ALLOCATABLE             :: ZCount(:)
         REAL(8),ALLOCATABLE             :: ZSum(:)
 
@@ -508,18 +507,10 @@
         ENDIF
 
         CALL ReadMesh(meshFile,myMesh)
-        ALLOCATE(Node_InOut(1:myMesh%np))
         ALLOCATE(ZCount(1:myMesh%np))
         ALLOCATE(ZSum(1:myMesh%np))
         ZCount(:) = 0
         ZSum(:) = 0
-        DO I = 1, myMesh%np
-            IF(myMesh%nodes(I,3).GT.-1000)THEN
-                Node_InOut(I) = -1
-            ELSE
-                Node_InOut(I) = 1
-            ENDIF
-        ENDDO
 
         ! Removing the need to have a second mesh of flagged values
         flagMesh = myMesh
@@ -531,7 +522,6 @@
 
         DO I = 1, NumDEMFiles
             CALL ReadFlt(HDRFile(I),DEMFile(I),myFLT)
-            !CALL CAA(myMesh,flagMesh,zMesh,myFLT,mult_fac,coord) 
             CALL CAA(myMesh,flagMesh,myFLT,coord) 
             DO J = 1, myMesh%np
                 IF(ZCount(J).NE.0) THEN
@@ -541,14 +531,7 @@
             ZCount(:) = 0
             ZSum(:) = 0
         ENDDO
-
-!       DO I = 1, myMesh%np
-!           IF(ZCount(I).NE.0) THEN
-!               myMesh%nodes(I,3) = mult_fac * (ZSum(I) / ZCount(I))
-!           ENDIF
-!       ENDDO
         
-        !CALL WriteMesh(zMesh,outMeshFile,coord) 
         CALL WriteMesh(myMesh,outMeshFile,coord) 
 
         WRITE(*,'(A)')''
@@ -626,12 +609,9 @@
             z = myMesh%nodes(I,3)
             
             IF(z.GT.-1000) GOTO 2000 !...Only interpolate flagged-values
-            !IF(Node_InOut(I).EQ.-1) GOTO 2000 !...Only interpolate flagged-values
 
             IF((x.GT.x_toplt).AND.(x.LT.x_botrt).AND.(y.GT.y_botrt).AND. &
                     (y.LT.y_toplt))THEN
-
-                !Node_InOut(I) = 1
 
                 dx = x_toplt - x
                 dy = y_toplt - y
