@@ -1,5 +1,9 @@
 # DEM2GRD
 
+This project is no longer maintainted.
+
+Please see the new project @ https://github.com/mattbilskie/PyDEM2GRD.
+
 This program assigns ADCIRC mesh nodes an elevation based on a digital elevation model (DEM).
 
 ## Citation
@@ -42,7 +46,7 @@ The contents are as follows:
 
 Notes on the flagged ADCIRC mesh:
 
-Only flagged nodes (less than or equal to -1000) will be included for interpolation. A flag value of -1001 uses the method in Bilskie & Hagen. A flag value of -1002 will use the methods in Bilskie & Hagen and multiply the result by 2, a value of -1003 will multiple by 3, and so on. This essentially increases the control volume and is a method to smooth the elevations. Including a ì1î in the hundredths place will only interpolate ìwetî value within the control volume (i.e. -1101). This is useful for interpolating within rivers and channels when you do not want to include DEM cells on the land in the averaging method.
+Only flagged nodes (less than or equal to -1000) will be included for interpolation. A flag value of -1001 uses the method in Bilskie & Hagen. A flag value of -1002 will use the methods in Bilskie & Hagen and multiply the result by 2, a value of -1003 will multiple by 3, and so on. This essentially increases the control volume and is a method to smooth the elevations. Including a ‚Äú1‚Äù in the hundredths place will only interpolate ‚Äúwet‚Äù value within the control volume (i.e. -1101). This is useful for interpolating within rivers and channels when you do not want to include DEM cells on the land in the averaging method.
 
 ## Disclaimer
 
